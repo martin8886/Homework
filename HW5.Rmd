@@ -1,0 +1,130 @@
+---
+title: "Live Session Unit 5 Assignment"
+author: "Martin"
+date: "September 27, 2018"
+output: html_document
+---
+
+
+
+* Required Libraries
+  +dplyr
+  
+Can also be found at the repo below:
+https://github.com/martin8886/Homework
+
+
+
+#1 Data Munging
+
+##a.
+
+We read our data using a semicolon as our separator and assign specific column names.
+
+* Names
+* Gender
+* Qty_Children
+
+```{r echo=TRUE}
+library("dplyr")
+
+df <- read.table("yob2016.txt", sep=";", header=FALSE)
+names(df) <- c("Names", "Gender", "Qty_Children")
+```
+
+##b.
+
+Summary and structure of our data
+
+```{r echo=TRUE}
+summary(df)
+str(df)
+```
+
+##c. 
+
+Grep pulls our name of interest.
+
+```{r echo=TRUE}
+grep("yyy$",df$Names, value=TRUE)
+```
+
+
+##d.
+
+We remove the name of interest
+
+```{r ech=TRUE}
+y2016 <- filter(df, Names != "Fionayyy")
+```
+
+#2 Data Merging
+
+##a.
+
+We read our data using a comma as our separator and assign the same names for our columns.
+
+```{r echo=TRUE}
+
+y2015 <- read.table("yob2015.txt", sep=",", header=FALSE)
+names(y2015) <- c("Names", "Gender", "Qty_Children")
+```
+
+##b. 
+
+Using the tail function we observe names that start with Z tend to be male.
+
+```{r echo=TRUE}
+tail(y2015, 10)
+```
+
+##c.
+
+Finally we combine both dataframes only keeping those with shared values using the transmute function.
+
+```{r echo=TRUE}
+final <- merge(x=y2016, y=y2015, by="Names")
+final <- transmute(final,  Names = Names, Gender = Gender.x, Quantity = Qty_Children.x + Qty_Children.y)
+```
+
+#3. Data Summary
+
+##a.
+
+We use our transmute to create a new dataframe using existing data and name it final.
+
+Sum function determines the total number of people with popular names.
+
+```{r echo=TRUE}
+final <- transmute(final,  Names = Names, Gender = Gender, Total = Quantity)
+sum(final$Total)
+
+```
+
+b.
+
+```{r echo=TRUE}
+final <- final[with(final, order(Total, Names, Gender, decreasing = TRUE)),]
+
+#With head set to 10 we can see the top 10 names
+head(final, 10)
+```
+
+c.
+
+We subset our dataframe to include everything but males.
+
+```{r echo=TRUE}
+
+final <- subset(x=final, Gender != "M")
+head(final, 10)
+
+```
+
+d.
+
+We save our top 10 list of female names as a csv file.
+
+```{r echo=TRUE}
+write.csv(final[1:10,1],'TopTenFemaleNames.csv')
+```

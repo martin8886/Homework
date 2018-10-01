@@ -1,0 +1,18 @@
+
+Codebook
+
+## Objects
+final - dataframe that contains our data from both data sets
+y2015 - dataframe of yob2015.txt
+y2016 - dataframe of yob2016.txt
+
+## Versions
+
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows >= 8 x64 (build 9200)
+
+
+## Packages
+
+dplyr
